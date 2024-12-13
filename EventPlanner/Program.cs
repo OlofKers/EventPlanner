@@ -9,6 +9,12 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<EventplannerContext>();
 
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/Login/Login";
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,6 +30,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

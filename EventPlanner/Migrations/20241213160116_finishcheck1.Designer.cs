@@ -4,6 +4,7 @@ using EventPlanner.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventPlanner.Migrations
 {
     [DbContext(typeof(EventplannerContext))]
-    partial class EventplannerContextModelSnapshot : ModelSnapshot
+    [Migration("20241213160116_finishcheck1")]
+    partial class finishcheck1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,18 +98,6 @@ namespace EventPlanner.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "User"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("EventPlanner.Models.Suggestion", b =>
@@ -154,24 +145,6 @@ namespace EventPlanner.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1,
-                            UserAge = 18,
-                            UserName = "DefaultUser",
-                            UserPassword = "123456"
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 2,
-                            UserAge = 17,
-                            UserName = "DefaultAdmin",
-                            UserPassword = "password123"
-                        });
                 });
 
             modelBuilder.Entity("EventPlanner.Models.Gathering", b =>

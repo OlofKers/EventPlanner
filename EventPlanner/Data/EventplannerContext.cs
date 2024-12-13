@@ -73,26 +73,26 @@ namespace EventPlanner.Data
 
             modelBuilder.Entity<User>(entity =>
             {
-                var userRole = new Role() { Id = 1, Name = "User" };
-                var adminRole = new Role() { Id = 2, Name = "Admin" };
+                //var userRole = new Role() { Id = 1, Name = "User" };
+                //var adminRole = new Role() { Id = 2, Name = "Admin" };
 
-                var defaultUser = new User()
-                {
-                    UserId = 1,
-                    UserName = "DefaultUser",
-                    UserPassword = "123456",
-                    UserAge = 18,
-                    RoleId = 1                    
-                };
+                //var defaultUser = new User()
+                //{
+                //    UserId = 1,
+                //    UserName = "DefaultUser",
+                //    UserPassword = "123456",
+                //    UserAge = 18,
+                //    RoleId = 1                    
+                //};
 
-                var defaultAdmin = new User()
-                {
-                    UserId = 2,
-                    UserName = "DefaultAdmin",
-                    UserPassword = "password123",
-                    UserAge = 17,
-                    RoleId = 2
-                };
+                //var defaultAdmin = new User()
+                //{
+                //    UserId = 2,
+                //    UserName = "DefaultAdmin",
+                //    UserPassword = "password123",
+                //    UserAge = 17,
+                //    RoleId = 2
+                //};
 
                 entity.HasKey(u => u.UserId);
 
@@ -111,9 +111,33 @@ namespace EventPlanner.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
+            modelBuilder.Entity<Role>().HasData(
+                new Role() { Id = 1, Name = "User" },
+                new Role() { Id = 2, Name = "Admin" }
+);
+
+            modelBuilder.Entity<User>().HasData(
+                new User()
+                {
+                    UserId = 1,
+                    UserName = "DefaultUser",
+                    UserPassword = "123456",
+                    UserAge = 18,
+                    RoleId = 1
+                },
+                new User()
+                {
+                    UserId = 2,
+                    UserName = "DefaultAdmin",
+                    UserPassword = "password123",
+                    UserAge = 17,
+                    RoleId = 2
+                }
+            );
 
 
-            
+
+
         }
     }
 }
