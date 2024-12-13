@@ -8,6 +8,7 @@
         public bool MinorsAllowed { get; set; }
         public DateTime GatheringStart {  get; set; }
         public DateTime GatheringEnd { get; set; }
+
         public Category? GatheringCategory { get; set; }
         public IEnumerable<Registration>? Registrations { get; set; }
 

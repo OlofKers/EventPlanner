@@ -1,7 +1,13 @@
+using EventPlanner.Models;
+using EventPlanner.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<EventplannerContext>();
 
 var app = builder.Build();
 
