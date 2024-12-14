@@ -1,0 +1,65 @@
+﻿@model IEnumerable<EventPlanner.Models.Gathering>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GatheringName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GatheringDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinorsAllowed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GatheringStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GatheringEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GatheringCategory)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GatheringName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GatheringDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MinorsAllowed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GatheringStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GatheringEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GatheringCategory.CategoryName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GatheringId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GatheringId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GatheringId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

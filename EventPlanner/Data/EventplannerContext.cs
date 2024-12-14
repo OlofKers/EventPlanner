@@ -21,13 +21,14 @@ namespace EventPlanner.Data
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(c => c.CategoryId);
+
                 entity.Property(c => c.CategoryName)
                       .IsRequired()
                       .HasMaxLength(100);
 
                 entity.HasMany(c => c.Gatherings)
                       .WithOne(g => g.GatheringCategory)
-                      .HasForeignKey(g => g.GatheringId)
+                      .HasForeignKey(g => g.CategoryId)
                       .OnDelete(DeleteBehavior.Cascade);
 
             });
@@ -35,6 +36,7 @@ namespace EventPlanner.Data
             modelBuilder.Entity<Gathering>(entity =>
             {
                 entity.HasKey(g => g.GatheringId);
+
                 entity.Property(g => g.GatheringName)
                       .IsRequired()
                       .HasMaxLength(100);
@@ -43,6 +45,11 @@ namespace EventPlanner.Data
                       .WithOne(r => r.RegistrationGathering)
                       .HasForeignKey(r => r.RegistrationId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                //entity.HasOne(g => g.GatheringCategory)
+                //      .WithMany(c => c.Gatherings)
+                //      .HasForeignKey(c => c.GatheringId)
+                //      .OnDelete(DeleteBehavior.Restrict);
 
 
             });
