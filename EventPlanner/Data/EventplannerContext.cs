@@ -9,7 +9,7 @@ namespace EventPlanner.Data
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<Suggestion> Suggestions { get; set; }
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Role> Roles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionstring = @"Data Source=.;Initial Catalog=EventPlanner;Integrated Security=true;TrustServerCertificate=True;";
@@ -42,7 +42,7 @@ namespace EventPlanner.Data
                 entity.HasMany(g => g.Registrations)
                       .WithOne(r => r.RegistrationGathering)
                       .HasForeignKey(r => r.RegistrationId)
-                      .OnDelete(DeleteBehavior.Cascade);        
+                      .OnDelete(DeleteBehavior.Cascade);
 
 
             });
@@ -109,12 +109,13 @@ namespace EventPlanner.Data
                       .WithOne(r => r.RegistrationOwner)
                       .HasForeignKey(r => r.RegistrationId)
                       .OnDelete(DeleteBehavior.Cascade);
+
             });
 
             modelBuilder.Entity<Role>().HasData(
                 new Role() { Id = 1, Name = "User" },
                 new Role() { Id = 2, Name = "Admin" }
-);
+            );
 
             modelBuilder.Entity<User>().HasData(
                 new User()
@@ -123,7 +124,7 @@ namespace EventPlanner.Data
                     UserName = "DefaultUser",
                     UserPassword = "123456",
                     UserAge = 18,
-                    RoleId = 1
+                    UserRole = 1
                 },
                 new User()
                 {
@@ -131,9 +132,24 @@ namespace EventPlanner.Data
                     UserName = "DefaultAdmin",
                     UserPassword = "password123",
                     UserAge = 17,
-                    RoleId = 2
-                }
-            );
+                    UserRole = 2
+                });
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(ro => ro.Id);
+
+                entity.Property(ro => ro.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+                entity.HasMany(ro => ro.UsersWithRole)
+                      .WithOne(u => u.Role)
+                      .HasForeignKey(u => u.UserRole)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });   
+
+
+            
 
 
 
