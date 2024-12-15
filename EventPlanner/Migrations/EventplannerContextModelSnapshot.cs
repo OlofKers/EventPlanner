@@ -41,41 +41,82 @@ namespace EventPlanner.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryDesc = "Events where music is played for large groups of people to listen.Often takes place outside.",
+                            CategoryName = "Concerts"
+                        });
                 });
 
             modelBuilder.Entity("EventPlanner.Models.Gathering", b =>
                 {
                     b.Property<int>("GatheringId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GatheringId"));
+
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("GatheringDesc")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("GatheringEnd")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("GatheringEnd")
+                        .HasColumnType("date");
 
                     b.Property<string>("GatheringName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("GatheringStart")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("GatheringStart")
+                        .HasColumnType("date");
 
                     b.Property<bool>("MinorsAllowed")
                         .HasColumnType("bit");
 
                     b.HasKey("GatheringId");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Gatherings");
+
+                    b.HasData(
+                        new
+                        {
+                            GatheringId = 1,
+                            CategoryId = 1,
+                            GatheringDesc = "A Concert where big musical stars such as John Christmas play their music for people to enjoy",
+                            GatheringEnd = new DateOnly(2024, 12, 27),
+                            GatheringName = "Christmas Rock Fest",
+                            GatheringStart = new DateOnly(2024, 12, 25),
+                            MinorsAllowed = true
+                        });
                 });
 
             modelBuilder.Entity("EventPlanner.Models.Registration", b =>
                 {
                     b.Property<int>("RegistrationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RegistrationId"));
+
+                    b.Property<int>("GatheringId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("RegistrationId");
+
+                    b.HasIndex("GatheringId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Registrations");
                 });
@@ -108,24 +149,6 @@ namespace EventPlanner.Migrations
                             Id = 2,
                             Name = "Admin"
                         });
-                });
-
-            modelBuilder.Entity("EventPlanner.Models.Suggestion", b =>
-                {
-                    b.Property<int>("SuggestionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SuggestionName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SuggestionsDesc")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SuggestionId");
-
-                    b.ToTable("Suggestions");
                 });
 
             modelBuilder.Entity("EventPlanner.Models.User", b =>
@@ -179,7 +202,7 @@ namespace EventPlanner.Migrations
                 {
                     b.HasOne("EventPlanner.Models.Category", "GatheringCategory")
                         .WithMany("Gatherings")
-                        .HasForeignKey("GatheringId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -190,30 +213,19 @@ namespace EventPlanner.Migrations
                 {
                     b.HasOne("EventPlanner.Models.Gathering", "RegistrationGathering")
                         .WithMany("Registrations")
-                        .HasForeignKey("RegistrationId")
+                        .HasForeignKey("GatheringId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EventPlanner.Models.User", "RegistrationOwner")
                         .WithMany("Registrations")
-                        .HasForeignKey("RegistrationId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("RegistrationGathering");
 
                     b.Navigation("RegistrationOwner");
-                });
-
-            modelBuilder.Entity("EventPlanner.Models.Suggestion", b =>
-                {
-                    b.HasOne("EventPlanner.Models.User", "SuggestionOwner")
-                        .WithMany("Suggestions")
-                        .HasForeignKey("SuggestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SuggestionOwner");
                 });
 
             modelBuilder.Entity("EventPlanner.Models.User", b =>
@@ -245,8 +257,6 @@ namespace EventPlanner.Migrations
             modelBuilder.Entity("EventPlanner.Models.User", b =>
                 {
                     b.Navigation("Registrations");
-
-                    b.Navigation("Suggestions");
                 });
 #pragma warning restore 612, 618
         }

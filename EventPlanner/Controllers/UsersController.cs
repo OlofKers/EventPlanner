@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EventPlanner.Data;
 using EventPlanner.Models;
+using System.Security.Claims;
 
 namespace EventPlanner.Controllers
 {
@@ -17,6 +18,25 @@ namespace EventPlanner.Controllers
         public UsersController(EventplannerContext context)
         {
             _context = context;
+        }
+
+        public async Task<IActionResult> Profile()
+        {
+            // Get the logged-in user's ID
+            int userId = GetCurrentUserId();
+
+            // Fetch user details along with their registrations
+            var user = await _context.Users
+                .Include(u => u.Registrations)
+                    .ThenInclude(r => r.RegistrationGathering)
+                .FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         // GET: Users
@@ -152,6 +172,12 @@ namespace EventPlanner.Controllers
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
+        }
+
+        private int GetCurrentUserId()
+        {
+            // Replace with your logic to fetch the logged-in user ID
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }
