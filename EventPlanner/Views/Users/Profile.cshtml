@@ -1,0 +1,42 @@
+﻿@model User
+
+<h1>Profile</h1>
+
+<div>
+    <h2>Welcome, @Model.UserName!</h2>
+    <p><strong>Age:</strong> @Model.UserAge</p>
+    <p><strong>Role:</strong> @Model.Role?.Name</p>
+</div>
+
+<h3>Your Registrations</h3>
+@if (Model.Registrations != null && Model.Registrations.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Gathering</th>
+                <th>Registration Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var registration in Model.Registrations)
+            {
+                <tr>
+                    <td>@registration.RegistrationGathering?.GatheringName</td>
+                    <td>@registration.RegistrationCreated.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@registration.UserId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@registration.UserId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@registration.UserId">Delete</a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>You have not registered for any gatherings yet.</p>
+}
+
