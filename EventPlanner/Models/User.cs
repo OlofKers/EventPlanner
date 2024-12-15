@@ -10,7 +10,7 @@
         public int UserRole { get; set; }
         public Role? Role { get; set; }
 
-        public IEnumerable<Suggestion>? Suggestions { get; set; }
+        //public IEnumerable<Suggestion>? Suggestions { get; set; }
 
         public IEnumerable<Registration>? Registrations { get; set; }
 

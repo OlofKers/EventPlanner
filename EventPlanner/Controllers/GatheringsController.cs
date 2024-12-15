@@ -49,14 +49,14 @@ namespace EventPlanner.Controllers
         // GET: Gatherings/Create
         public IActionResult Create()
         {
-            var categories = _context.Gatherings.ToList();
+            var categories = _context.Categories;
 
             var viewmodel = new GatheringModel
             {
                 Categories = categories.Select(c => new SelectListItem
                 {
                     Value = c.CategoryId.ToString(),
-                    Text = c.GatheringCategory.CategoryName
+                    Text = c.CategoryName
                 }).ToList()
             };
             return View(viewmodel);
@@ -83,9 +83,11 @@ namespace EventPlanner.Controllers
 
                 _context.Gatherings.Add(newGathering);
                 await _context.SaveChangesAsync();
-                
-                return(RedirectToAction("Index"));
+
+                return (RedirectToAction("Index"));
             }
+
+            model.Categories = GetCategories();
             return View(model);
         }
 
@@ -180,5 +182,16 @@ namespace EventPlanner.Controllers
         {
             return _context.Gatherings.Any(e => e.GatheringId == id);
         }
+
+        private List<SelectListItem> GetCategories()
+        {
+            return _context.Categories.Select(c => new SelectListItem
+            {
+                Value = c.CategoryId.ToString(),
+                Text = c.CategoryName
+            }).ToList();
+        }
     }
 }
+
+

@@ -1,4 +1,4 @@
-﻿@model EventPlanner.Models.Gathering
+﻿@model EventPlanner.Viewmodels.GatheringModel
 
 @{
     ViewData["Title"] = "Create";
@@ -10,36 +10,47 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <div class="form-group">
+                <label asp-for="SelectedCategoryId" class="control-label"></label>
+                <select asp-for="SelectedCategoryId" class ="form-control" asp-items="Model.Categories"></select>
+            </div> *@
+
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+                <label for="SelectedCategoryId">Category</label>
+                @Html.DropDownListFor(
+                         model => model.SelectedCategoryId,
+                         Model.Categories,
+                         "Select a Category",
+                         new { @class = "form-control" }
+                         )
             </div>
             <div class="form-group">
-                <label asp-for="GatheringName" class="control-label"></label>
-                <input asp-for="GatheringName" class="form-control" />
-                <span asp-validation-for="GatheringName" class="text-danger"></span>
+                <label asp-for="Gathering.GatheringName" class="control-label"></label>
+                <input asp-for="Gathering.GatheringName" class="form-control" />
+                <span asp-validation-for="Gathering.GatheringName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="GatheringDesc" class="control-label"></label>
-                <input asp-for="GatheringDesc" class="form-control" />
-                <span asp-validation-for="GatheringDesc" class="text-danger"></span>
+                <label asp-for="Gathering.GatheringDesc" class="control-label"></label>
+                <input asp-for="Gathering.GatheringDesc" class="form-control" />
+                <span asp-validation-for="Gathering.GatheringDesc" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="MinorsAllowed" /> @Html.DisplayNameFor(model => model.MinorsAllowed)
+                    <input class="form-check-input" asp-for="Gathering.MinorsAllowed" /> @Html.DisplayNameFor(model => model.Gathering.MinorsAllowed)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="GatheringStart" class="control-label"></label>
-                <input asp-for="GatheringStart" class="form-control" />
-                <span asp-validation-for="GatheringStart" class="text-danger"></span>
+                
+                <label asp-for="Gathering.GatheringStart" class="control-label"></label>
+                <input asp-for="Gathering.GatheringStart" class="form-control" type="date" />
+                <span asp-validation-for="Gathering.GatheringStart" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="GatheringEnd" class="control-label"></label>
-                <input asp-for="GatheringEnd" class="form-control" />
-                <span asp-validation-for="GatheringEnd" class="text-danger"></span>
+                <label asp-for="Gathering.GatheringEnd" class="control-label"></label>
+                <input asp-for="Gathering.GatheringEnd" class="form-control" type="date" />
+                <span asp-validation-for="Gathering.GatheringEnd" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

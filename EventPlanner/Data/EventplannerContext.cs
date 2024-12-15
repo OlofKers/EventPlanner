@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EventPlanner.Models;
+using Humanizer;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Numerics;
 namespace EventPlanner.Data
 {
     public class EventplannerContext : DbContext
@@ -7,7 +11,7 @@ namespace EventPlanner.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Gathering> Gatherings { get; set; }
         public DbSet<Registration> Registrations { get; set; }
-        public DbSet<Suggestion> Suggestions { get; set; }
+        //public DbSet<Suggestion> Suggestions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,6 +37,14 @@ namespace EventPlanner.Data
 
             });
 
+            modelBuilder.Entity<Category>().HasData(
+                new Category()
+                {
+                    CategoryId = 1,
+                    CategoryName = "Concerts",
+                    CategoryDesc = "Events where music is played for large groups of people to listen.Often takes place outside."
+                });
+
             modelBuilder.Entity<Gathering>(entity =>
             {
                 entity.HasKey(g => g.GatheringId);
@@ -43,16 +55,23 @@ namespace EventPlanner.Data
 
                 entity.HasMany(g => g.Registrations)
                       .WithOne(r => r.RegistrationGathering)
-                      .HasForeignKey(r => r.RegistrationId)
+                      .HasForeignKey(r => r.GatheringId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                //entity.HasOne(g => g.GatheringCategory)
-                //      .WithMany(c => c.Gatherings)
-                //      .HasForeignKey(c => c.GatheringId)
-                //      .OnDelete(DeleteBehavior.Restrict);
 
 
             });
+            modelBuilder.Entity<Gathering>().HasData(
+                new Gathering()
+                {
+                    GatheringId = 1,
+                    GatheringName = "Christmas Rock Fest",
+                    GatheringDesc = "A Concert where big musical stars such as John Christmas play their music for people to enjoy",
+                    MinorsAllowed = true,
+                    GatheringStart = new DateOnly(2024,12,25),
+                    GatheringEnd = new DateOnly(2024,12,27),
+                    CategoryId = 1
+                });
 
             modelBuilder.Entity<Registration>(entity =>
             {
@@ -60,23 +79,23 @@ namespace EventPlanner.Data
 
                 entity.HasOne(r => r.RegistrationOwner)
                       .WithMany(u => u.Registrations)
-                      .HasForeignKey(u => u.RegistrationId)
+                      .HasForeignKey(u => u.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<Suggestion>(entity =>
-            {
-                entity.HasKey(s => s.SuggestionId);
+            //modelBuilder.Entity<Suggestion>(entity =>
+            //{
+            //    entity.HasKey(s => s.SuggestionId);
 
-                entity.Property(s => s.SuggestionName)
-                      .IsRequired()
-                      .HasMaxLength(100);
+            //    entity.Property(s => s.SuggestionName)
+            //          .IsRequired()
+            //          .HasMaxLength(100);
 
-                entity.HasOne(s => s.SuggestionOwner)
-                      .WithMany(u => u.Suggestions)
-                      .HasForeignKey(u => u.SuggestionId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
+            //    entity.HasOne(s => s.SuggestionOwner)
+            //          .WithMany(u => u.Suggestions)
+            //          .HasForeignKey(u => u.SuggestionId)
+            //          .OnDelete(DeleteBehavior.Cascade);
+            //});
 
             modelBuilder.Entity<User>(entity =>
             {
@@ -107,15 +126,11 @@ namespace EventPlanner.Data
                       .IsRequired()
                       .HasMaxLength(100);
 
-                entity.HasMany(u => u.Suggestions)
-                      .WithOne(s => s.SuggestionOwner)
-                      .HasForeignKey(s => s.SuggestionId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                //entity.HasMany(u => u.Suggestions)
+                //      .WithOne(s => s.SuggestionOwner)
+                //      .HasForeignKey(s => s.SuggestionId)
+                //      .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasMany(u => u.Registrations)
-                      .WithOne(r => r.RegistrationOwner)
-                      .HasForeignKey(r => r.RegistrationId)
-                      .OnDelete(DeleteBehavior.Cascade);
 
             });
 
