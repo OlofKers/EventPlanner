@@ -2,6 +2,7 @@ using EventPlanner.Models;
 using EventPlanner.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Swashbuckle.AspNetCore.SwaggerGen;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,6 +15,20 @@ builder.Services.AddAuthentication("Cookies")
     {
         options.LoginPath = "/Login/Login";
     });
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Fix infinite cycle on n:n relations
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System
+        .Text
+        .Json
+        .Serialization
+        .ReferenceHandler
+        .IgnoreCycles;
+});
 
 var app = builder.Build();
 
@@ -32,6 +47,15 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI(
+    (config) =>
+    {
+        config.SwaggerEndpoint("v1/swagger.json", "Event Planner");
+        config.RoutePrefix = "swagger";
+    }
+);
 
 app.MapControllerRoute(
     name: "default",
